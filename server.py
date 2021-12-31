@@ -1,5 +1,6 @@
 import json, sys
 from socket import socket, AF_INET, SOCK_STREAM
+import log.server_log_config as logg
 
 def PortAddr():
     port = 7777
@@ -24,8 +25,9 @@ def main():
     while True:
         client, addr = s.accept()
         data = client.recv(1000000)
+
         data = json.loads(data.decode('utf-8'))
-        print(data)
+        logg.app_log.info(data)
         answer[data["action"]]["account_name"] = data["user"]["account_name"]
         msg = json.dumps(answer[data["action"]])
         client.send(msg.encode('utf-8'))

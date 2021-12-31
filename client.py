@@ -1,6 +1,7 @@
-import sys
 from socket import socket, AF_INET, SOCK_STREAM
-import json
+import log.client_log_config as logg
+import sys,json
+
 
 def PortAddr():
     port = 7777
@@ -25,12 +26,15 @@ def main():
     s = socket(AF_INET, SOCK_STREAM)
     port,addr = PortAddr()
     msgj = Msg()
-    print(type(Msg()))
-    s.connect((addr, port))
-    s.send(msgj)
-    data = s.recv(1000000)
-    print(json.loads(data.decode("utf-8"))["alert"], json.loads(data.decode("utf-8"))["account_name"])
-    s.close()
+    try:
+        s.connect((addr, port))
+        s.send(msgj)
+        data = s.recv(1000000)
+        logg.app_log.info(json.loads(data.decode("utf-8")))
+        s.close()
+    except ConnectionRefusedError:
+        logg.app_log.warning("Ошибка подключения")
+
 
 
 if __name__ == "__main__":
