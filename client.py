@@ -2,9 +2,7 @@ import sys
 from socket import socket, AF_INET, SOCK_STREAM
 import json
 
-
-def main():
-    s = socket(AF_INET, SOCK_STREAM)
+def PortAddr():
     port = 7777
     addr = 'localhost'
     if (len(sys.argv) > 1):
@@ -12,7 +10,9 @@ def main():
         if (len(sys.argv) == 3):
             port = int(sys.argv[2])
 
-    s.connect((addr, port))
+    return  [port,addr]
+
+def Msg():
     msg = {
         "action": "presence",
         "user": {
@@ -20,8 +20,14 @@ def main():
             "status": "I am batman!"
         }
     }
-
-    s.send(json.dumps(msg).encode("utf-8"))
+    return json.dumps(msg).encode("utf-8")
+def main():
+    s = socket(AF_INET, SOCK_STREAM)
+    port,addr = PortAddr()
+    msgj = Msg()
+    print(type(Msg()))
+    s.connect((addr, port))
+    s.send(msgj)
     data = s.recv(1000000)
     print(json.loads(data.decode("utf-8"))["alert"], json.loads(data.decode("utf-8"))["account_name"])
     s.close()

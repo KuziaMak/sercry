@@ -1,16 +1,18 @@
 import json, sys
 from socket import socket, AF_INET, SOCK_STREAM
 
-
-def main():
-    s = socket(AF_INET, SOCK_STREAM)
+def PortAddr():
     port = 7777
     addr = ''
     if "-p" in sys.argv:
         port = int(sys.argv[sys.argv.index("-p") + 1])
     if "-a" in sys.argv:
         addr = sys.argv[sys.argv.index("-a") + 1]
+    return [port,addr]
 
+def main():
+    s = socket(AF_INET, SOCK_STREAM)
+    port,addr = PortAddr()
     s.bind((addr, port))
     s.listen(5)
     answer = {
